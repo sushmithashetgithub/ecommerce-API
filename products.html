@@ -27,3 +27,43 @@ The form should include an input field where users can enter the product name. T
 </body>
 </html>
 
+post request with html
+
+const express = require('express');
+const app = express();
+const PORT = 3000;
+const path = require("path");
+
+app.use(express.json());
+
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+
+// Use routes
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
+app.use('/cart', cartRoutes);
+
+// Home route (optional)
+app.get('/', (req, res) => {
+    res.send('Welcome to the E-Commerce API');
+});
+
+app.get("/api/products", (req, res) => {
+  res.sendFile(path.join(__dirname, "view", "products.html"));
+});
+
+// POST /api/products - handle form submission
+app.post("/api/products", (req, res) => {
+  const productName = req.body.productName;
+  console.log("Product added:", productName);
+  res.send(`Product "${productName}" added successfully.`);
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
